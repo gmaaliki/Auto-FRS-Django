@@ -14,6 +14,6 @@ def aboutUs(request):
     return HttpResponse(template.render(context, request))
 
 def features(request):
-    template = loader.get_template('aboutus.html')
+    template = loader.get_template('features.html')
     context = {}
     return HttpResponse(template.render(context, request))

@@ -23,7 +23,14 @@
   </head>
   <body>
   {% include 'navbar.html' %}
-  <h1>Step 3</h1><br>
+  <h1>Step 2</h1><br>
+  <p>Matkul yang tersedia:</p>
+  {% if data %}
+      {% for item in data %}
+          <li>{{ item.name }}</li>
+      {% endfor %} 
+  {% endif %}
+  <br>
   {% if this_schedule %}
   <p>Terpilih:</p>
     {% for item in this_schedule %}
@@ -33,20 +40,14 @@
   <br>
   <form method="POST">
     {% csrf_token %}
-    <label for="name">Input activity name:</label><br>
-    <input type="text" id="name" name="name">
+    <label for="subject_name">Input subject name:</label><br>
+    <input type="text" id="subject_name" name="subject_name">
     <br>
-    <label for="day">Input day:</label><br>
-    <input type="text" id="day" name="day">
-    <br>
-    <label for="start_hour">Input start hour:</label><br>
-    <input type="text" id="start_hour" name="start_hour">
-    <br>
-    <label for="end_hour">Input day:</label><br>
-    <input type="text" id="end_hour" name="end_hour">
+    <label for="subject_code">Input subject code:</label><br>
+    <input type="text" id="subject_code" name="subject_code">
     <br>
     <input type="submit" value="submit">
   </form>
-  <button onclick="location.href={% url 'app1:csphome' %};">Selanjutnya</button>
+  <button onclick="location.href={% url 'app1:input_activity' %};">Selanjutnya</button>
   </body>
 </html>
