@@ -93,14 +93,22 @@ def input_subject(request):
             subject_code = form.cleaned_data['subject_code']
             
             subject = SubjectsAvailable.objects.get(name=subject_name, subject_code=subject_code)
+            scheduled = Schedule.objects.all()
 
-            arr = []
-            arr.append(subject.name)
-            arr.append(subject.subject_code)
-            arr.append(subject.day)
-            arr.append(subject.start_hour)
-            arr.append(subject.end_hour)
-            add_activity(arr)
+            flag = 0
+            for item in scheduled:
+                if (subject.day == item.day) and (int(subject.start_hour) < int(item.end_hour)) and (int(subject.end_hour) > int(item.start_hour)):
+                    flag = 1
+                    break
+
+            if flag == 0:
+                arr = []
+                arr.append(subject.name)
+                arr.append(subject.subject_code)
+                arr.append(subject.day)
+                arr.append(subject.start_hour)
+                arr.append(subject.end_hour)
+                add_activity(arr)
 
             this_schedule = Schedule.objects.all()
             context.update({"this_schedule": this_schedule})
@@ -125,13 +133,22 @@ def input_activity(request):
         start_hour = form.cleaned_data['start_hour']
         end_hour = form.cleaned_data['end_hour']
         
-        arr = []
-        arr.append(name)
-        arr.append('-')
-        arr.append(day)
-        arr.append(start_hour)
-        arr.append(end_hour)
-        add_activity(arr)
+        scheduled = Schedule.objects.all()
+
+        flag = 0
+        for item in scheduled:
+            if (day == item.day) and (int(start_hour) < int(item.end_hour)) and (int(end_hour) > int(item.start_hour)):
+                flag = 1
+                break
+
+        if flag == 0:
+            arr = []
+            arr.append(name)
+            arr.append('-')
+            arr.append(day)
+            arr.append(start_hour)
+            arr.append(end_hour)
+            add_activity(arr)
 
         this_schedule = Schedule.objects.all()
         context.update({"this_schedule": this_schedule})
@@ -142,61 +159,103 @@ def input_activity(request):
 
     return HttpResponse(template.render(context, request))
 
-#class Backtrack:
-#    def __init__(self):
-#        self.path = Schedule.objects.all()
-#        self.intervals = []
-#        for item in self.path:
-#            temp = (item.day, item.start_hour, item.end_hour)
-#            self.intervals.append(temp)
-#        
-#
-#    def backtrack(self, path):
-#        if self.sks_total > 18:
-#            if self.path:
-#                self.path = self.path
-#                self.path_res = tuple(self.path.copy())
-#                self.results.append(self.path_res)
-#            return
-#
-#        for a in self.subject_arr:
-#            self.flag = 0
-#
-#            # Memeriksa apakah mata kuliah sudah diambil atau tidak
-#            for subj in self.path:
-#                if a.name == subj.name:
-#                    self.flag = 1
-#                    break
-#
-#            # Memeriksa apakah waktu sudah terpakai atau tidak
-#            for times in self.intervals:
-#                if (a.day == times[0]) and (int(a.start_hour) < int(times[2])) and (int(a.end_hour) > int(times[1])):
-#                    self.flag = 1
-#                    break
-#
-#            # Memeriksa apakah kombinasinya sudah ada atau tidak
-#            self.temp = self.path.copy()
-#            self.temp.append(a)
-#            self.temp.sort(key= lambda x: x.name)
-#            self.temp = tuple(self.temp)
-#            if self.temp in self.schedule_set:
-#                self.flag = 1
-#
-#            if self.flag == 1:
-#                continue
-#
-#            self.path.append(a)
-#            self.intervals.append((a.day, a.start_hour, a.end_hour))
-#            self.sks_total += a.sks
-#            self.schedule_set.add(self.temp)
-#
-#            self.backtrack()
-#
-#            self.path.pop()
-#            self.intervals.pop()
-#            self.sks_total -= a.sks
-#
-#    def result(request):
-#        template = loader.get_template('result.html')
-#        context = {}
-#        return HttpResponse(template.render(context, request))
+class Activity:
+    def __init__(self, arr):
+        self.name = arr[0]
+        self.subject_code = arr[1]
+        self.day = arr[2]
+        self.start_hour = arr[3]
+        self.end_hour = arr[4]
+
+class Backtrack:
+    def __init__(self):
+        self.subject_arr = SubjectsAvailable.objects.all()
+        self.schedule_queryset = Schedule.objects.all()
+        self.path = []
+
+        for item in self.schedule_queryset:
+            self.temp = []
+            self.temp.append(item.name)
+            self.temp.append(item.subject_code)
+            self.temp.append(item.day)
+            self.temp.append(item.start_hour)
+            self.temp.append(item.end_hour)
+            
+            self.obj = Activity(self.temp)
+            self.path.append(self.obj)
+
+        self.intervals = []
+        self.schedule_set = set()
+        self.results = []
+        self.sks_total = 0
+        for item in self.path:
+            self.temp = (item.day, item.start_hour, item.end_hour)
+            self.intervals.append(self.temp)
+            if item.subject_code == '-':
+                continue
+
+            self.subject_sks = SubjectsAvailable.objects.get(name=item.name, subject_code=item.subject_code)
+            self.sks_total += self.subject_sks.sks
+        
+    def backtrack(self):
+        if self.sks_total > 18:
+            if self.path:
+                self.path = self.path
+                self.path_res = tuple(self.path.copy())
+                self.results.append(self.path_res)
+            return
+
+        for a in self.subject_arr:
+            self.flag = 0
+
+            # Memeriksa apakah mata kuliah sudah diambil atau tidak
+            for subj in self.path:
+                if a.name == subj.name:
+                    self.flag = 1
+                    break
+
+            # Memeriksa apakah waktu sudah terpakai atau tidak
+            for times in self.intervals:
+                if (a.day == times[0]) and (int(a.start_hour) < int(times[2])) and (int(a.end_hour) > int(times[1])):
+                    self.flag = 1
+                    break
+
+            # Memeriksa apakah kombinasinya sudah ada atau tidak
+            self.temp = self.path.copy()
+            self.temp.append(a)
+            self.temp.sort(key= lambda x: x.name)
+            self.temp = tuple(self.temp)
+            if self.temp in self.schedule_set:
+                self.flag = 1
+
+            if self.flag == 1:
+                continue
+
+            self.path.append(a)
+            self.intervals.append((a.day, a.start_hour, a.end_hour))
+            self.sks_total += a.sks
+            self.schedule_set.add(self.temp)
+
+            self.backtrack()
+
+            self.path.pop()
+            self.intervals.pop()
+            self.sks_total -= a.sks
+
+def result(request):
+    bt = Backtrack()
+    bt.backtrack()
+
+    template = loader.get_template('result.html')
+    arr = []
+    if len(bt.results) > 5:
+        arr.append(bt.results[0])
+        arr.append(bt.results[1])
+        arr.append(bt.results[2])
+        arr.append(bt.results[3])
+        arr.append(bt.results[4])
+        context = {"res": arr}
+    else:
+        context = {"res": bt.results}
+
+    return HttpResponse(template.render(context, request))

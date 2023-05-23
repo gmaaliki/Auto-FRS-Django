@@ -12,5 +12,5 @@ urlpatterns = [
     path('schedule/step1/', cspalgo.input_semester, name='input_semester'),
     path('schedule/step2/', cspalgo.input_subject, name='input_subject'),
     path('schedule/step3/', cspalgo.input_activity, name='input_activity'),
-    #path('schedule/result/', cspalgo.result, name='result'),
+    path('schedule/result/', cspalgo.result, name='result'),
 ]

@@ -25,6 +25,13 @@
   {% include 'navbar.html' %}
   <h1>Hasil Akhir</h1><br>
 
-  <button onclick="location.href={% url 'app1:home' %};">Finish</button>
+  {% for item in res %}
+    {% for activity in item %}
+    {{ activity.name }} {{ activity.subject_code }}
+    {% endfor %}
+    <br>
+  {% endfor %}
+
+  <button onclick="location.href='{% url 'app1:home' %}';">Finish</button>
   </body>
 </html>
