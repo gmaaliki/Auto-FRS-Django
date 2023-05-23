@@ -24,29 +24,7 @@
   <body>
     <div class="main2">
       <div class="desktop-6">
-        <div class="navbar1">
-          <div class="navbar-child">
-            <div class="frame-container">
-              <div class="schematics-container">
-                <div class="schematics2">AUTO FRS</div>
-              </div>
-            </div>
-          </div>
-          <div class="features-container">
-            <div class="features1">Features</div>
-          </div>
-          <div class="features-container">
-            <div class="features1">Tentang Kami</div>
-          </div>
-          <div class="component-7-group">
-            <div class="component-71">
-              <div class="features1">Masuk</div>
-            </div>
-            <div class="component-62">
-              <div class="features1">Daftar</div>
-            </div>
-          </div>
-        </div>
+      {% include 'navbar.html' %}
         <div class="desktop-6-inner">
           <div class="generate-your-frs-schedule-bas-parent">
             <div class="meet-our-team">
@@ -62,61 +40,6 @@
           </div>
         </div>
       </div>
-      <div class="desktop-7">
-        <div class="frame-parent">
-          <div class="meet-our-team-wrapper">
-            <div class="meet-our-team" data-aos="zoom-in" data-aos-duration="1000">Meet our team!</div>
-          </div>
-          <div class="frame-group">
-            <div class="frame-div" data-aos="zoom-in-down" data-aos-duration="1000">
-              <div class="frame-parent1">
-                <div class="rectangle-parent">
-                  <div class="rectangle-div"></div>
-                  <div class="frame-child1"></div>
-                  <div class="frame-child2"></div>
-                </div>
-                <img
-                  class="unsplashzz5lqe-vsmy-icon"
-                  alt=""
-                  src="{% static 'photo/our team/ucup.png' %}"
-                />
-              </div>
-              <b class="programmer">Algorithm Programmer</b>
-              <b class="ghifari-maaliki-syafa">Ghifari Maaliki Syafa Syuhada</b>
-            </div>
-            <div class="frame-div" data-aos="zoom-in-down" data-aos-duration="1000">
-              <div class="frame-parent1">
-                <div class="rectangle-parent">
-                  <div class="rectangle-div"></div>
-                  <div class="frame-child1"></div>
-                  <div class="frame-child2"></div>
-                </div>
-                <div class="wrapper">
-                  <img class="icon" alt="" src="{% static 'photo/our team/870959 1.png' %}" />
-                </div>
-              </div>
-              <b class="programmer">Web/Algorithm Programmer & UI Designer</b>
-              <b class="ghifari-maaliki-syafa">Dimas Prihady Setyawan</b>
-            </div>
-            <div class="frame-div" data-aos="zoom-in-down" data-aos-duration="1000">
-              <div class="frame-parent1">
-                <div class="rectangle-parent">
-                  <div class="rectangle-div"></div>
-                  <div class="frame-child1"></div>
-                  <div class="frame-child2"></div>
-                </div>
-                <img
-                  class="unsplashzz5lqe-vsmy-icon1"
-                  alt=""
-                  src="{% static 'photo/our team/ogix.png' %}"
-                />
-              </div>
-              <b class="programmer">UI Designer</b>
-              <b class="ghifari-maaliki-syafa">Widian Sasi Disertasiani</b>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="desktop-8">
         <div class="frame-parent6">
           <div class="about-auto-frs-parent">
@@ -126,105 +49,7 @@
               mahasiswa untuk mengambil Matakuliah pilihan. Program ini dibuat
               menggunakan Algortihma CSP dengan metode Backtracking.
             </div>
-            <button py-click="main()" id="main" class="py-button" data-aos="zoom-in-down" data-aos-duration="1000">Coba Auto FRS!</button>
-          </div>
-            <div class="answer-format"  data-aos="zoom-in-down" data-aos-duration="1000">
-              {% if available_subject is None%}
-                <form method="POST">
-                  {% csrf_token %}
-                  <label for="user_semester">Input Semester:</label><br>
-                  <input type="text" id="user_semester" name="user_semester">
-                  <input type="submit" value="submit">
-                </form>              
-              {% endif %}
-
-              {% if available_subject is not None %}
-                Available subject:
-              {% for x in available_subject %}
-                  <p>{{ x }}</p>
-                {% endfor %}
-              {% endif %}
-
-              {% if isCalculating is False %}
-                <form method="POST">
-                  {% csrf_token %}
-                  <label for="subject_name">Input subject name:</label><br>
-                  <input type="text" id="subject_name" name="subject_name">
-                  <label for="subject_code">Input subject code:</label><br>
-                  <input type="text" id="subject_code" name="subject_code">
-                  <input type="submit" value="submit">
-                </form>
-              {% endif %}
-              
-              {% if preferred_subject is not None%}
-                Schedule:
-                {% for x in preferred_subject %}
-                  {{x}}<br>
-                {% endfor %}
-              {% endif %}
-            </div>         
-          </div>
-        </div>
-      </div>
-      <ol>
-        <div id="display-subject"></div>
-        <div id="display-write"></div>
-      </ol>
-      <div class="desktop-9">
-        <div class="our-problem">
-          <div class="our-problem1" data-aos="zoom-in" data-aos-duration="1000">Our Problem</div>
-          <div class="problems-1">
-            <div class="problem-1">
-              <div class="frame-problem-1" data-aos="zoom-in" data-aos-duration="1000">
-                <div class="bg-line-1">
-                  <div class="bg-line-1-child"></div>
-                  <div class="bg-line-1-item"></div>
-                  <div class="bg-line-1-inner"></div>
-                </div>
-                <img
-                  class="content-problem-1"
-                  alt=""
-                  src="{% static 'photo/problem/Content Problem 2.png' %}"
-                />
-              </div>
-              <b class="algoritma-program-yang" data-aos="zoom-in" data-aos-duration="1000">
-                Algoritma program yang masih dikembangkan jadi belum efisien
-              </b>
-            </div>
-            <div class="problem-1">
-              <div class="frame-problem-1" data-aos="zoom-in" data-aos-duration="1000">
-                <div class="bg-line-1">
-                  <div class="bg-line-1-child"></div>
-                  <div class="bg-line-1-item"></div>
-                  <div class="bg-line-1-inner"></div>
-                </div>
-                <img
-                  class="content-problem-1"
-                  alt=""
-                  src="{% static 'photo/problem/Content Problem 1.png' %}"
-                />
-              </div>
-              <b class="algoritma-program-yang" data-aos="zoom-in" data-aos-duration="1000"
-                >Tech-Stack yang digunakan masih terbatas</b
-              >
-            </div>
-            <div class="problem-1">
-              <div class="frame-problem-1" data-aos="zoom-in" data-aos-duration="1000">
-                <div class="bg-line-1">
-                  <div class="bg-line-1-child"></div>
-                  <div class="bg-line-1-item"></div>
-                  <div class="bg-line-1-inner"></div>
-                </div>
-                <img
-                  class="content-problem-1"
-                  alt=""
-                  src="{% static 'photo/problem/Content Problem 3.png' %}"
-                />
-              </div>
-              <b class="algoritma-program-yang" data-aos="zoom-in" data-aos-duration="1000"
-                >Output memiliki banyak sekali kombinasi yang tidak bisa ditampilkan semua</b
-              >
-            </div>
+            <button onclick="location.href={% url 'app1:csphome' %};" id="main" class="py-button" data-aos="zoom-in-down" data-aos-duration="1000">Coba Auto FRS!</button>
           </div>
         </div>
       </div>
